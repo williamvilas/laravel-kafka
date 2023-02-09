@@ -1,0 +1,55 @@
+version: '3.5'
+services:
+    app.test:
+        build:
+            context: .docker/sail/runtimes/8.1
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        container_name: kafka-log
+        image: sail-8.1/app
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        ports:
+            - '${APP_PORT:-91}:80'
+            - '${VITE_PORT:-5176}:${VITE_PORT:-5173}'
+        environment:
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - sail
+    zookeeper:
+        image: wurstmeister/zookeeper
+        container_name: zookeeper
+        ports:
+            - "2181:2181"
+        networks:
+            - sail
+    kafka:
+        image: wurstmeister/kafka
+        container_name: kafka
+        ports:
+            - "29092:29092"
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+            - /home/srv/kafka:/kafka/kafka-logs-1
+        environment:
+            #KAFKA_LOG_DIRS: /kafka/kafka-logs-1
+            #KAFKA_ADVERTISED_HOST_NAME: ${HOST_IP}
+            #KAFKA_CREATE_TOPICS: "topic-test:1:1"
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+            KAFKA_LISTENERS: EXTERNAL_SAME_HOST://:29092,INTERNAL://:9092
+            KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL_SAME_HOST://localhost:29092
+            #KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL_SAME_HOST://${HOST_IP}:29092
+            KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL_SAME_HOST:PLAINTEXT
+            KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+            restart: always
+        networks:
+            - sail
+networks:
+    sail:
+        driver: bridge
