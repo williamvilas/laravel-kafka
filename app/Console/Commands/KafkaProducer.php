@@ -29,7 +29,7 @@ class KafkaProducer extends Command
      */
     public function handle()
     {
-        for ($i = 0; $i < 2; $i++) {
+        for ($i = 0; $i < 20; $i++) {
             $kafkaService = new kafkaService();
             $faker = Faker::create('pt_BR');
 
