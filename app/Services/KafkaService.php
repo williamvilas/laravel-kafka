@@ -14,6 +14,8 @@ use longlang\phpkafka\Consumer\ConsumerConfig;
 
 class KafkaService
 {
+    private Consumer $consumer;
+
     public function producer(array $data, string $topic, string $key): void
     {
         $config = $this->setConfigProducer();
@@ -35,15 +37,13 @@ class KafkaService
             $clientId
         );
 
-        $consumer = new Consumer($config);
-        $message = $consumer->consume();
+        $this->consumer = new Consumer($config);
+        return $this->consumer->consume();
+    }
 
-        if ($message) {
-            $consumer->ack($message);
-            return $message;
-        }
-
-        return null;
+    public function ack(ConsumeMessage $message): void
+    {
+        $this->consumer->ack($message);
     }
 
     private function setConfigProducer(): ProducerConfig

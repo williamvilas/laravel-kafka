@@ -1,18 +1,18 @@
 version: '3.5'
 services:
-    app.test:
+    instace-01.app:
         build:
             context: .docker/sail/runtimes/8.1
             dockerfile: Dockerfile
             args:
                 WWWGROUP: '${WWWGROUP}'
-        container_name: kafka-log
+        container_name: instace-01
         image: sail-8.1/app
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:
-            - '${APP_PORT:-91}:80'
-            - '${VITE_PORT:-5176}:${VITE_PORT:-5173}'
+            - '91:80'
+            - '5177:${VITE_PORT:-5173}'
         environment:
             WWWUSER: '${WWWUSER}'
             LARAVEL_SAIL: 1
@@ -22,6 +22,30 @@ services:
             - '.:/var/www/html'
         networks:
             - sail
+
+    instace-02.app:
+        build:
+            context: .docker/sail/runtimes/8.1
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        container_name: instace-02
+        image: sail-8.1/app
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        ports:
+            - '92:80'
+            - '5178:${VITE_PORT:-5173}'
+        environment:
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - sail
+
     zookeeper:
         image: wurstmeister/zookeeper
         container_name: zookeeper
@@ -36,7 +60,7 @@ services:
             - "29092:29092"
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-            - /home/srv/kafka:/kafka/kafka-logs-1
+            - .volumes/kafka:/kafka/kafka-logs-1
         environment:
             #KAFKA_LOG_DIRS: /kafka/kafka-logs-1
             #KAFKA_ADVERTISED_HOST_NAME: ${HOST_IP}

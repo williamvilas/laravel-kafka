@@ -7,6 +7,7 @@ namespace App\Console\Commands;
 use App\Helper\SlugPatternHelper;
 use App\Jobs\CreateLog;
 use App\Services\KafkaService;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 use Faker\Factory as Faker;
@@ -36,23 +37,33 @@ class KafkaConsumer extends Command
     {
         $i = 0;
         $kafkaService = new kafkaService();
+        $timeout = Carbon::now()->addSeconds(10);
+        $date = Carbon::now();
 
-        while (true) {
+        while ($timeout > $date) {
 
-            $message = $kafkaService->consumer('testGroup', 'EXPERIENCE', 'test_custom', 'test_custom');
+            $message = $kafkaService->consumer(
+                KafkaConsumer::class, // ID do grupo
+                'EXPERIENCE', // Nome do tópico. Suporta vários tópicos consumidos simultaneamente.
+                KafkaConsumer::class, // ID da instância do grupo. Use configurações diferentes para consumidores diferentes.
+                $_SERVER['HOSTNAME'] // ID do cliente Kafka. Use configurações diferentes para consumidores diferentes.
+            );
 
             if ($message) {
                 $data = json_decode($message->getValue());
 
                 $this->info(
-                    ++$i . ') consumer: ' . $data->name .
+                    ++$i. ') Consumer: ' . $data->name .
                     ' / gender: ' . $data->gender .
                     ' / doc: ' . $data->document .
                     ' / credit: ' . $data->credit_request
                 );
+
+                $kafkaService->ack($message);
             }
 
             sleep(1);
+            $date = Carbon::now();
         }
     }
 }
