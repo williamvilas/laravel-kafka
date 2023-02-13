@@ -46,7 +46,7 @@ class KafkaConsumer extends Command
                 KafkaConsumer::class, // ID do grupo
                 'EXPERIENCE', // Nome do tópico. Suporta vários tópicos consumidos simultaneamente.
                 KafkaConsumer::class, // ID da instância do grupo. Use configurações diferentes para consumidores diferentes.
-                $_SERVER['HOSTNAME'] // ID do cliente Kafka. Use configurações diferentes para consumidores diferentes.
+                $_SERVER['HOSTNAME'], // ID do cliente Kafka. Use configurações diferentes para consumidores diferentes.
             );
 
             if ($message) {

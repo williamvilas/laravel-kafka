@@ -59,7 +59,7 @@ class KafkaService
         string $groupId,
         string $topic,
         string $groupInstanceId,
-        string $clientId = null,
+        string $clientId = null
     ): ConsumerConfig
     {
         $config = new ConsumerConfig();
