@@ -43,10 +43,10 @@ class KafkaConsumer extends Command
         while ($timeout > $date) {
 
             $message = $kafkaService->consumer(
-                KafkaConsumer::class, // ID do grupo
-                'EXPERIENCE', // Nome do tópico. Suporta vários tópicos consumidos simultaneamente.
-                KafkaConsumer::class, // ID da instância do grupo. Use configurações diferentes para consumidores diferentes.
-                $_SERVER['HOSTNAME'], // ID do cliente Kafka. Use configurações diferentes para consumidores diferentes.
+                'squad', // ID do grupo
+                'EXPERIENCE',
+                'test_custom', // ID da instância do grupo. Use configurações diferentes para consumidores diferentes.
+                'test_custom' // ID do cliente Kafka. Use configurações diferentes para consumidores diferentes.
             );
 
             if ($message) {
