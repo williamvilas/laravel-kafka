@@ -37,10 +37,8 @@ class KafkaConsumer extends Command
     {
         $i = 0;
         $kafkaService = new kafkaService();
-        $timeout = Carbon::now()->addSeconds(10);
-        $date = Carbon::now();
 
-        while ($timeout > $date) {
+        while (true) {
 
             $message = $kafkaService->consumer(
                 'squad', // ID do grupo
@@ -63,7 +61,6 @@ class KafkaConsumer extends Command
             }
 
             sleep(1);
-            $date = Carbon::now();
         }
     }
 }

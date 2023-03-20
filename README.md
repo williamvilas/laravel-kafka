@@ -1,18 +1,27 @@
 ## Aplicação Laravel
 
-- Executar o comando para enviar mensagens para o kafka
+- Iniciar a aplicação
 ```
-php artisan kafka:producer
-```
-
-- Executar o comando para ler as mensagens do kafka
-```
-php artisan kafka:consumer
+make build
 ```
 
-## Kafka
-
-- Para visualizar as mensagens no Kafka
+- Produzir eventos para o Apache Kafka
+```
+make producer
 ```
 
+- Consumir mensagens na primeira instância
+```
+make consumer_01
+```
+
+- Consumir mensagens na segunda instância
+```
+make consumer_02
+```
+
+- Acompanhar as mensagens no Apahce Kafka
+
+```
+make kafka-consumer
 ```
