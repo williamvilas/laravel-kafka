@@ -4,6 +4,9 @@ build:
 	docker compose exec instace-01.app composer install
 	docker compose exec instace-01.app php artisan key:generate
 
+#consumer:
+#	docker compose exec kafka opt/kafka_2.13-2.8.1/bin/kafka-console-consumer.sh --topic EXPERIENCE --from-beginning --bootstrap-server localhost:9092
+
 consumer_01:
 	docker compose exec instace-01.app php artisan kafka:consumer
 
@@ -24,3 +27,6 @@ kafka_consumer_02:
 
 kafka_consumer_03:
 	docker exec -it kafka3 kafka-console-consumer --topic EXPERIENCE --from-beginning --bootstrap-server localhost:9092
+
+kafka_delete:
+	docker exec -it kafka1 kafka-topics --bootstrap-server localhost:9092 --topic EXPERIENCE --delete
