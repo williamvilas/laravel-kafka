@@ -5,6 +5,12 @@
 make build
 ```
 
+- Acompanhar as mensagens no Apahce Kafka
+
+```
+make kafka_consumer_01
+```
+
 - Produzir eventos para o Apache Kafka
 ```
 make producer
@@ -20,8 +26,4 @@ make consumer_01
 make consumer_02
 ```
 
-- Acompanhar as mensagens no Apahce Kafka
 
-```
-make kafka-consumer
-```
